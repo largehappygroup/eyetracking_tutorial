@@ -34,7 +34,7 @@ def make_shapes(filename):
     if name in Bounding_Boxes:
         return Bounding_Boxes[name]
     else:
-        ref = pd.read_csv(f'../analysis/fully_annotated/{name}')
+        ref = pd.read_csv(f'./word_coordinates_split/{name}')
         boxes = pd.DataFrame()
 
         for i in range(len(ref)): # creating shapes for each word in the file
@@ -121,19 +121,23 @@ def localize_gaze(gaze_point, row, boxes):
 def main():
     global Bounding_Boxes
     # folder where all of participants' gaze data is stored 
-    gaze_files = os.listdir("/home/zachkaras/pickle_data")
+    gaze_files = os.listdir("./gaze")
     reading_aois, writing_aois = make_aois() # running this once to make boxes for AOIs
     
     for file in gaze_files: # for each participant
-        pid = re.sub("_all.pkl", "", file)
+        temp = re.split("_", file)
+        pid = temp[0]
+        func = re.sub(".csv", "", temp[-1])
         # path for output
-        path = f"/home/zachkaras/code_summ_data/{pid}/annotated_gaze"
+        path = "./annotated_gaze"
         try:
             os.mkdir(path)
         except:
             print("folder already exists")
         
         # eyetracking files
+        print(pid, file, func)
+        break
         eye_file = open(f"/home/zachkaras/pickle_data/{file}", "rb")
         
         contents = pickle.load(eye_file)
