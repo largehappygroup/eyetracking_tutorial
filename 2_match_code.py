@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import numpy as np
 
-oracle = pd.read_csv('../stimuli/pruned_seeds2.csv')
+oracle = pd.read_csv('./pruned_seeds2.csv')
 box_files = os.listdir('./word_coordinates')
 
 for boxes in box_files:
