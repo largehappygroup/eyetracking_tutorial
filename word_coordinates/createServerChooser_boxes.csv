@@ -2,7 +2,7 @@ word,predicted_word,x,y,width,height
 public,public,12,35,69,24
 void,void,86,35,48,20
 createServerChooser(),createServerchooser(),141,35,230,24
------------,unknown_0,379,35,15,24
+{,{,379,35,15,24
 MainMenuBar,MainMenuBar,54,62,124,20
 mainMenuBar,mainMenuBar,184,62,123,20
 =,=,313,62,16,13
@@ -14,7 +14,7 @@ nodeId,nodeId,98,116,69,20
 -----------,dbMgr,195,116,186,24
 dbMgr.getNodeId((,getNodeId((,195,116,186,24
 String,string,389,116,69,24
------------,unknown_1,467,116,12,24
+),),467,116,12,24
 -----------,cbNE,486,116,262,24
 cbNE.getSelectedItem());,getselectedItem());,486,116,262,24
 DownloadFileChooser,DownloadFilechooser,55,170,209,20
@@ -32,7 +32,7 @@ tfFileNameOnly,tfFileNameonly,141,197,156,24
 mainMenuBar,mainMenuBar,54,251,262,24
 -----------,putcommand(,54,251,262,24
 Object,Object,324,251,69,24
------------,unknown_2,402,251,12,24
+),),402,251,12,24
 downloadFile,downloadFile,422,251,134,20
 );,);,564,251,22,24
 downloadFile.setViewId(,downloadFile.setViewId(,54,278,251,24
@@ -40,6 +40,6 @@ mainMenuBar,mainMenuBar,313,278,252,24
 mainMenuBar.getViewId(),getViewId(),313,278,252,24
 );,);,575,278,21,24
 downloadFile.setVisible(,downloadFilesetvisible,54,305,262,24
-true,true,325,305,48,19
+-----------,TRUE,325,305,48,19
 );,);,381,305,21,24
------------,unknown_3,11,332,15,24
+},},11,332,15,24
