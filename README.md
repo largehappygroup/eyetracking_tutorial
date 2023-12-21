@@ -60,10 +60,17 @@ Next, we want to get rid of the trailing and leading parentheses, brackets, semi
   <img src="img/preprocessed_coordinates.png" alt="preprocessed" width="70%" class="center"/>
 </p>
 
-#### Step 3.5. Splitting by Dot Operators but not Comments (3.5_split_bounding_boxes.ipynb)
-This next script tries 
+#### Step 3.5. Splitting by Dot Operators but not by Comments (3.5_split_bounding_boxes.ipynb)
+This next script tries to split the dot operators, and concatenate strings and comments, which were split by OCR. Based on the width of the boxes and the number of characters therein, this script creates a new box for the string after the dot operator. 
+<p align="center">
+  <img src="img/coordinates_split.png" alt="split" width="70%" class="center"/>
+</p>
 
-
-
+#### Step 4. Localize Gaze to Code (4_localize_gaze.py)
+Now that we've made the bounding boxes and found coordinates for the different parts of the code, we can localze the gaze coordinates from our eye-tracking file to these boxes. This step takes a while to run, but uses geopandas to make shapes out of each bounding box, then finds the rectangle in which each gaze coordinate lands. This is then recorded in a new annotated gaze file, which is a copy of the original gaze file. In this new file, however, there are new columns added for each token in the code. If the participant looked at a token in the code, there will be a 1 in that column for that timestamp. 
+In this localize gaze script, I also add new boxes for different Areas of Interest (AOIs), which can be customized for the current task
+<p align="center">
+  <img src="img/coordinates_split.png" alt="split" width="70%" class="center"/>
+</p>
 
 
