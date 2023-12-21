@@ -10,7 +10,7 @@ There should be three primary forms of data input for mapping gaze coordinates t
 This image shows eye-tracking data from a Tobii eye-tracker. In the red box are x and y coordinates for the left and right eye separately. To get a single gaze coordinate, I average the x coordinates with one another, and the y coordinates with one another. In the blue box is the timestamp for the gaze coordinate. 
 
 <p align="center">
-  <img src="img/createServerChooser.png" alt="stimulux" width="70%" class="center"/>
+  <img src="stimuli/createServerChooser.png" alt="stimulus" width="70%" class="center"/>
 </p>
 As I was logging the eye-tracking data, I also recorded the stimulus that the participant was completing. The eye-tracking data above is from this stimulus, the createServerChooser method. The ground truth code is located in a spreadsheet called `pruned_seeds2.csv`. 
 
@@ -20,5 +20,21 @@ If you're analyzing multiple participants and multiple stimuli, you'll just need
 #### Step 1. Drawing Bounding Boxes (1_draw_boxes.ipynb)
 In general, these steps describe how I solved the problem of mapping gaze data to code, but there are likely other, more efficient methods for doing this. My method for drawing bounding boxes around tokens in the code was to use Optical Character Recognition (OCR). For this to work, you'll first need to isolate the part of the screenshot where the code is located. For these screenshots, I found I needed to cut off 100px from the left, 1000px from the right, 10px from the top, and 1150px from the bottom. 
 
+<p align="center">
+  <img src="img/cropped_img.png" alt="stimulus" width="50%" class="center"/>
+</p>
 
+This code is all within the jupyter notebook script, but next you can draw the bounding boxes around the tokens in the code using easyocr.
+<p align="center">
+  <img src="img/bounding_boxes.png" alt="bounding_boxes" width="50%" class="center"/>
+</p>
+
+The rest of the script then isolates the text within each bounding box, performs preprocessing, and uses OCR to try to identify the characters. 
+<p align="center">
+  <img src="img/bounding_boxes.png" alt="bounding_boxes" width="50%" class="center"/>
+</p>
+For instance, OCR correctly identifies the text in this image to be 'createServerChooser( )'
+<p align="center">
+  <img src="temp/createServerChooser/'createServerChooser( ).png'" alt="isolated_box" width="20%" class="center"/>
+</p>
 
