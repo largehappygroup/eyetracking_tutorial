@@ -3,4 +3,14 @@ My goal with this tutorial is to show other lab-members/researchers how to map r
 
 #### Step 0. Data Inputs
 There should be two primary forms of data input for mapping gaze coordinates to the stimuli: raw eye-tracking files and screenshots of the stimuli. 
-![test](img/eyetracking_example_file.png)
+
+<p align="center">
+  <img src="img/eyetracking_example_file.png" alt="example_eyetracking" width="70%" class="center"/>
+</p>
+
+<p align="center">
+  <img src="img/createServerChooser.png" alt="stimulux" width="70%" class="center"/>
+</p>
+
+
+
