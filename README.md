@@ -60,17 +60,23 @@ Next, we want to get rid of the trailing and leading parentheses, brackets, semi
   <img src="img/preprocessed_coordinates.png" alt="preprocessed" width="70%" class="center"/>
 </p>
 
-#### Step 3.5. Splitting by Dot Operators but not by Comments (3.5_split_bounding_boxes.ipynb)
+#### Step 4. Splitting by Dot Operators but not by Comments (4_split_bounding_boxes.ipynb)
 This next script tries to split the dot operators, and concatenate strings and comments, which were split by OCR. Based on the width of the boxes and the number of characters therein, this script creates a new box for the string after the dot operator. 
 <p align="center">
   <img src="img/coordinates_split.png" alt="split" width="70%" class="center"/>
 </p>
 
-#### Step 4. Localize Gaze to Code (4_localize_gaze.py)
+**If you're using something like srcML to get some semantic context for code, you can add that step here to modify the word_coordinates files. I'll add some steps at the end for how to do that.**
+
+#### Step 5. Localize Gaze to Code (5_localize_gaze.py)
 Now that we've made the bounding boxes and found coordinates for the different parts of the code, we can localze the gaze coordinates from our eye-tracking file to these boxes. This step takes a while to run, but uses geopandas to make shapes out of each bounding box, then finds the rectangle in which each gaze coordinate lands. This is then recorded in a new annotated gaze file, which is a copy of the original gaze file. In this new file, however, there are new columns added for each token in the code. If the participant looked at a token in the code, there will be a 1 in that column for that timestamp. 
-In this localize gaze script, I also add new boxes for different Areas of Interest (AOIs), which can be customized for the current task
+In this localize gaze script, I also add new boxes for different Areas of Interest (AOIs), which can be customized for your own task.
+
 <p align="center">
-  <img src="img/coordinates_split.png" alt="split" width="70%" class="center"/>
+  <img src="img/localized_gaze.png" alt="localized" width="100%" class="center"/>
 </p>
+
+#### Adding AST Context
+To add AST context to each token in the code, I used srcML. My study involved standalone methods that couldn't be parsed on their own. As a workaround, I used the ChatGPT API for wrapping each method in the required code so that it could be parsed. This code for wrapping methods is located in `4.1_maketrees.py`. Next, we can use srcML to parse these methods into xml trees corresponding to the Abstract Syntax Tree (located in `4.2_parse.py`). Finally, we can recursively walk through the trees and add context to each token `4.3_make_AST.py`.
 
 
