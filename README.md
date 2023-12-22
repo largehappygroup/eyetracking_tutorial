@@ -66,7 +66,7 @@ This next script tries to split the dot operators, and concatenate strings and c
   <img src="img/coordinates_split.png" alt="split" width="70%" class="center"/>
 </p>
 
-**If you're using something like srcML to get some semantic context for code, you can add that step here to modify the word_coordinates files. I'll add some steps at the end for how to do that.**
+**If you're using something like srcML to get some semantic context for code, you can add that step here to modify the word_coordinates files. I'll add some steps at the end for how to do that. If you're using srcML to parse, you'll need to manually check to make sure the tokens in the word_coordinate files line up with the output AST nodes (which can be tedious).**
 
 #### Step 5. Localize Gaze to Code (5_localize_gaze.py)
 Now that we've made the bounding boxes and found coordinates for the different parts of the code, we can localze the gaze coordinates from our eye-tracking file to these boxes. This step takes a while to run, but uses geopandas to make shapes out of each bounding box, then finds the rectangle in which each gaze coordinate lands. This is then recorded in a new annotated gaze file, which is a copy of the original gaze file. In this new file, however, there are new columns added for each token in the code. If the participant looked at a token in the code, there will be a 1 in that column for that timestamp. 
