@@ -28,8 +28,10 @@ def normalize_coordinates(x, y, w, h):
 # Later, the gaze coordinate will be matched to these boxes.
 def make_shapes(filename):
     global Bounding_Boxes
+    
     name = filename.split("_")[3]
-    name = f"{name}.csv"
+    name = f"{name}"
+    # print("filename", filename, name)
     
     if name in Bounding_Boxes:
         return Bounding_Boxes[name]
@@ -128,6 +130,7 @@ def main():
         temp = re.split("_", file)
         pid = temp[0]
         func = re.sub(".csv", "", temp[-1])
+        # print("file", file)
         # path for output
         path = "./annotated_gaze"
         try:
@@ -135,58 +138,60 @@ def main():
         except:
             print("folder already exists")
         
-        # eyetracking files
-        print(pid, file, func)
-        break
-        eye_file = open(f"/home/zachkaras/pickle_data/{file}", "rb")
+        # # eyetracking files
+        # eye_file = open(f"/home/zachkaras/pickle_data/{file}", "rb")
         
-        contents = pickle.load(eye_file)
+        # contents = pickle.load(eye_file)
         all_files = dict() # will store all participant's files as a pkl file
 
-        for key,values in contents.items(): # iterating through all participant's gaze files
-            print(key)    
-            boxes = make_shapes(key)
-            if re.search("reading", key):
-                boxes = pd.concat([boxes, reading_aois])
-            elif re.search("writing", key):
-                boxes = pd.concat([boxes, writing_aois])
-            
-            boxes = gpd.GeoSeries(boxes[0]) # turning boxes into geopandas object
-            
-            df = pd.DataFrame.from_dict(values).T
-            num_cols = len(df.columns)
-            if num_cols == 14: # older files didn't include data for distance from eye-tracker
-                df.columns = ['participant_id', 'function_name', 'function_id', 'system_timestamp',
-                                    'device_timestamp', 'valid_gaze_left', 'valid_gaze_right', 
-                                    'gaze_left_eye', 'gaze_right_eye', 'valid_pd_left', 'valid_pd_right',
-                                    'pd_left', 'pd_right', 'fixation']
-            elif num_cols == 18:
-                df.columns = ['participant_id', 'function_name', 'function_fid', 'system_timestamp',
-                                    'device_timestamp', 'valid_gaze_left', 'valid_gaze_right', 
-                                    'gaze_left_eye', 'gaze_right_eye', 'valid_pd_left', 'valid_pd_right',
-                                    'pd_left', 'pd_right', 'irl_left_eye_coordinates', 
-                                    'irl_right_eye_coordinates', 'irl_left_point_on_screen', 
-                                    'irl_right_point_on_screen', 'fixation']
-            else:
-                #print(f"weird column length. Participant: {file} | File: {key} | # Columns: {num_cols}")
-                continue # the only files without 14 or 18 columns have 0 columns
+        # for key,values in contents.items(): # iterating through all participant's gaze files
+        #     print(key)    
+        boxes = make_shapes(file)
+        if re.search("reading", file):
+            boxes = pd.concat([boxes, reading_aois])
+        elif re.search("writing", file):
+            boxes = pd.concat([boxes, writing_aois])
+        
+        boxes = gpd.GeoSeries(boxes[0]) # turning boxes into geopandas object
+        
+        # df = pd.DataFrame.from_dict(values).T
+        df = pd.read_csv(f"gaze/{file}")
+        # df.insert(0, '', pid)
+        num_cols = len(df.columns)
+        
+        if num_cols == 13: # older files didn't include data for distance from eye-tracker
+            df.columns = ['participant_id', 'function_name', 'function_id', 'system_timestamp',
+                                'device_timestamp', 'valid_gaze_left', 'valid_gaze_right', 
+                                'gaze_left_eye', 'gaze_right_eye', 'valid_pd_left', 'valid_pd_right',
+                                'pd_left', 'pd_right']
+        elif num_cols == 17:
+            df.columns = ['participant_id', 'function_name', 'function_fid', 'system_timestamp',
+                                'device_timestamp', 'valid_gaze_left', 'valid_gaze_right', 
+                                'gaze_left_eye', 'gaze_right_eye', 'valid_pd_left', 'valid_pd_right',
+                                'pd_left', 'pd_right', 'irl_left_eye_coordinates', 
+                                'irl_right_eye_coordinates', 'irl_left_point_on_screen', 
+                                'irl_right_point_on_screen']
+        else:
+            #print(f"weird column length. Participant: {file} | File: {key} | # Columns: {num_cols}")
+            continue # the only files without 14 or 18 columns have 0 columns
 
-            # iterate through each file, get gaze point
-            new_df = pd.DataFrame()
-            for i, row in df.iterrows(): # through each gaze file
-                gaze_point = get_gaze_point(row)
-                if gaze_point == -1: # NaN values should be filtered, but if there's anything weird
-                    print(f"NaN value for participant: {file} | File: {key}")
-                
-                new_row = localize_gaze(gaze_point, row, boxes) # assign gaze point to bounding box/aoi
-                new_df = pd.concat([new_df, new_row], axis=1)
-                
-            new_df = new_df.T
-            new_df.to_csv(f"{path}/{key}.csv")
-            all_files[key] = new_df.to_dict('records') # dictionary to be stored as a pickle file
-        pickle_dir = f"/home/zachkaras/annotated_pickle/{pid}_all.pkl"
-        with open(pickle_dir, 'wb') as f:
-            pickle.dump(all_files, f)
+        # iterate through each file, get gaze point
+        new_df = pd.DataFrame()
+        for i, row in df.iterrows(): # through each gaze file
+            gaze_point = get_gaze_point(row)
+            if gaze_point == -1: # NaN values should be filtered, but if there's anything weird
+                print(f"NaN value for participant: {file} | Particpant: {pid}")
+                continue
+            
+            new_row = localize_gaze(gaze_point, row, boxes) # assign gaze point to bounding box/aoi
+            new_df = pd.concat([new_df, new_row], axis=1)
+            
+        new_df = new_df.T
+        new_df.to_csv(f"{path}/{file}.csv")
+        # all_files[key] = new_df.to_dict('records') # dictionary to be stored as a pickle file
+        # pickle_dir = f"/home/zachkaras/annotated_pickle/{pid}_all.pkl"
+        # with open(pickle_dir, 'wb') as f:
+        #     pickle.dump(all_files, f)
 
 if __name__ == "__main__":
     main()
